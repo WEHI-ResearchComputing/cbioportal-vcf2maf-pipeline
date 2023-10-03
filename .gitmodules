@@ -1,0 +1,6 @@
+[submodule "genome-nexus-annotation-pipeline"]
+	path = genome-nexus-annotation-pipeline
+	url = https://github.com/genome-nexus/genome-nexus-annotation-pipeline.git
+[submodule "annotation-tools"]
+	path = annotation-tools
+	url = https://github.com/WEHI-ResearchComputing/annotation-tools.git
