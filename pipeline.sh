@@ -1,8 +1,25 @@
 #!/bin/bash
 
+function usage {
+    echo "$0 -i=<dir> -o=<dir> -p=<dir> -j=<jar> -c=center [-t=<dir>] [-e=error.log]"
+    echo -e "\t-i | --input-directory               input data directory for processing somatic mutation data files [REQUIRED]"
+    echo -e "\t-o | --output-directory              output directory to write processed and annotated MAF to [REQUIRED]"
+    echo -e "\t-p | --annotation-scripts-home       path to the annotation suite scripts directory [REQUIRED]"
+    echo -e "\t-j | --annotation-pipeline-jar       path to the annotation pipeline jar [REQUIRED]"
+    echo -e "\t-c | --center-name                   center name to be used in Center MAF field [REQUIRED]"
+    echo -e "\t-c | --isoform-override              Isoform Overrides - mskcc or uniprot [REQUIRED]"
+    echo -e "\t-t | --intermediate-files-directory  path to store intermediary files. Default is directory created with mktemp"
+    echo -e "\t-e | --annotation-error-log          path to store annotation pipeline error log. Default is ./error.log"
+}
+
 # parse input arguments
 for i in "$@"; do
 case $i in
+    -h|--help)
+    usage
+    exit 0
+    shift
+    ;;
     -i=*|--input-directory=*)
     INPUT_DATA_DIRECTORY="${i#*=}"
     echo -e "\tINPUT_DATA_DIRECTORY=${INPUT_DATA_DIRECTORY}"
