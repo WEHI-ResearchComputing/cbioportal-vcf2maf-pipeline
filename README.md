@@ -10,6 +10,7 @@ The pipeline script follows the steps:
 2. merges the mafs into a single one with `annotation-tools/merge_mafs.py`
 3. reduces the merged maf to a minimal maf using `cut` (grabbing columns as per [instructions on cBioPortal documentation](https://docs.cbioportal.org/file-formats/#minimal-maf-file-format))
 4. annotate the resultant minimal maf with the genome nexus annotation pipeline to obtain the final maf.
+    - the final maf will meet the requirements for cBioPortal as per [the cBioPortal documentation](https://docs.cbioportal.org/file-formats/#cbioportal-mutation-data-file-format).
 
 ## Setup
 
