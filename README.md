@@ -1,5 +1,5 @@
 # cbioportal-vcf2maf-pipeline
-A pipeline to convert VCF files with somatic mutations into a single MAF for import into cBioPortal.
+A pipeline to convert VCF files with **somatic** mutations into a single MAF for import into cBioPortal.
 
 The [Genome Nexus annotatino tools repo](https://github.com/genome-nexus/annotation-tools) has a pipeline script,
 but doesn't seem to work that well with our data (the annotator fails annotating more mutations than it should).
