@@ -1,5 +1,6 @@
 #!/bin/bash
 
+# function to print usage
 function usage {
     echo "$0 -i=<dir> -o=<dir> -p=<dir> -j=<jar> -c=center [-t=<dir>] [-e=error.log]"
     echo -e "\t-i | --input-directory               input data directory for processing somatic mutation data files [REQUIRED]"
@@ -65,20 +66,27 @@ case $i in
 esac
 done
 
+# set default values
 ANNOTATION_ERROR_LOG=${ANNOTATION_ERROR_LOG:-./error.log}
 ISOFORM_OVERRIDE=${ISOFORM_OVERRIDE:-uniprot}
 INTERMEDIATE_FILES_DIR=${INTERMEDIATE_FILES_DIR:-$(mktemp -d)}
 
+# file to store format for annotator
 formatfile="${INTERMEDIATE_FILES_DIR}/outmafformat.txt"
 
+# convert VCFs to MAFs using vcf2maf.py
 python "${ANNOTATION_SUITE_SCRIPTS_HOME}/vcf2maf.py" -i "${INPUT_DATA_DIRECTORY}" -o "${INTERMEDIATE_FILES_DIR}" -c "${CENTER_NAME}"
 
+# merge MAFs together
 python "${ANNOTATION_SUITE_SCRIPTS_HOME}/merge_mafs.py" -d "${INTERMEDIATE_FILES_DIR}" -o "${INTERMEDIATE_FILES_DIR}/merged.maf"
 
+# extract minimal columns as per https://docs.cbioportal.org/file-formats/#minimal-maf-file-format
 cut -f 3,5-7,11-13,16,34-35 "${INTERMEDIATE_FILES_DIR}/merged.maf" > "${INTERMEDIATE_FILES_DIR}/merged-minimal.maf"
 
+# write to format file, specifying required columns for cBioPortal as per https://docs.cbioportal.org/file-formats/#cbioportal-mutation-data-file-format
 echo "Hugo_Symbol,Entrez_Gene_Id,Center,NCBI_Build,Chromosome,Start_Position,End_Position,Variant_Classification,Variant_Type,Reference_Allele,Tumor_Seq_Allele1,Tumor_Seq_Allele2,dbSNP_RS,Tumor_Sample_Barcode,HGVSp_Short,t_alt_count,t_ref_count" > "${formatfile}"
 
+# annotate the MAF using the format file
 java -jar "${ANNOTATION_PIPELINE_JAR}" \
     --filename "${INTERMEDIATE_FILES_DIR}/merged-minimal.maf" \
     --output-filename "${OUTPUT_MAF}" \
